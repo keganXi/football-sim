@@ -19,7 +19,7 @@
 import numpy as np
 import time
 from passing import POSITION_COORDINATES
-from players import PLAYERS
+from players import HOME_PLAYERS
 from scan import scan_pitch
 
 
@@ -29,8 +29,8 @@ PITCH = np.zeros((ROWS, 9))
 PITCH = PITCH.astype(int)
 
 for key, value in POSITION_COORDINATES.items():
-    row = value[0]
-    col = value[1]
+    row = value["HOME"][0]
+    col = value["HOME"][1]
     print(f"Position {key}: {PITCH[row][col]}")
     PITCH[row][col] = 1
 
@@ -44,7 +44,7 @@ print("\nScan for passing lanes...")
 MINUTE = 0
 FULL_TIME = 90
 
-player_position = POSITION_COORDINATES["ST"]
+player_position = POSITION_COORDINATES["ST"]["HOME"]
 print(player_position)
 
 while MINUTE < FULL_TIME:
@@ -54,12 +54,12 @@ while MINUTE < FULL_TIME:
 
     get_position = ""
     for key, value in POSITION_COORDINATES.items():
-        if value == player:
+        if value["HOME"] == player:
             get_position = key
 
     position = ()
-    for item in PLAYERS:
+    for item in HOME_PLAYERS:
         if item["role"] == get_position:
             print(f"{item["name"]} - {item["role"]}")
     player_position = player
-    time.sleep(1)
+    # time.sleep(1)
