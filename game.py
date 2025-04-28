@@ -23,16 +23,25 @@ from players import HOME_PLAYERS
 from scan import scan_pitch
 
 
+def field_players(side):
+    # NOTE: side -> "HOME" or "AWAY"
+    num = 1
+    if side == "AWAY":
+        num = -1
+    for key, value in POSITION_COORDINATES.items():
+        row = value[side][0]
+        col = value[side][1]
+        print(f"Position {key}: {PITCH[row][col]}")
+        PITCH[row][col] = num
+
+
 COLS, ROWS = 9, 10
 
 PITCH = np.zeros((ROWS, 9))
 PITCH = PITCH.astype(int)
 
-for key, value in POSITION_COORDINATES.items():
-    row = value["HOME"][0]
-    col = value["HOME"][1]
-    print(f"Position {key}: {PITCH[row][col]}")
-    PITCH[row][col] = 1
+field_players("HOME")
+field_players("AWAY")
 
 
 print(PITCH)
@@ -44,13 +53,15 @@ print("\nScan for passing lanes...")
 MINUTE = 0
 FULL_TIME = 90
 
-player_position = POSITION_COORDINATES["ST"]["HOME"]
+player_position = POSITION_COORDINATES["LM"]["HOME"]
 print(player_position)
 
 while MINUTE < FULL_TIME:
     MINUTE+=1
 
     player = scan_pitch(PITCH, player_position)
+    if player is None:
+        print("nothing found")
 
     get_position = ""
     for key, value in POSITION_COORDINATES.items():
