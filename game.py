@@ -35,9 +35,9 @@ def field_players(side):
         PITCH[row][col] = num
 
 
-COLS, ROWS = 9, 10
+COLS, ROWS = 30, 100
 
-PITCH = np.zeros((ROWS, 9))
+PITCH = np.zeros((ROWS, COLS))
 PITCH = PITCH.astype(int)
 
 field_players("HOME")
