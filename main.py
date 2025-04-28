@@ -34,7 +34,7 @@
 import numpy as np
 import  json
 import time
-from passing import POSITION_COORDINATES
+from passing import POSITION_COORDINATES, get_passing_lane_and_path
 from players import HOME_PLAYERS
 from scan import scan_pitch
 
@@ -47,8 +47,7 @@ def field_players(side):
     for key, value in POSITION_COORDINATES.items():
         row = value[side][0]
         col = value[side][1]
-        print(f"Position {key}: {PITCH[row][col]}")
-        PITCH[row][col] = num
+        PITCH[row, col] = num
 
 
 COLS, ROWS = 19, 24 # (19, 24)
@@ -69,7 +68,7 @@ print("\nScan for passing lanes...")
 MINUTE = 0
 FULL_TIME = 90
 
-player_position = POSITION_COORDINATES["GK"]["HOME"]
+player_position = POSITION_COORDINATES["RM"]["HOME"]
 print(player_position)
 total_passes = []
 while MINUTE < FULL_TIME:
