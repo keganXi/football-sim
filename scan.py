@@ -8,7 +8,6 @@ def scan_pitch(grid, position, visited=None):
     # Check adjacent positions (up, down, left, right)
     row, col = position
     directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # Up, Down, Left, Right
-
     for dr, dc in directions:
         new_row, new_col = row + dr, col + dc
 
