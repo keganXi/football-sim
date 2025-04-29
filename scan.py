@@ -28,7 +28,7 @@ def scan_pitch(grid, position, start=None):
 
                 if grid[new_row, new_col] != 0 and grid[new_row, new_col] != -1:  # Check if it's occupied (player present)
                     pass_type, path = get_passing_lane_and_path(start, (new_row, new_col))
-                    if path is not None:
+                    if path is not None: # passing lane found
                         print(f"{start} -> {(new_row, new_col)} ({pass_type})")
                         return (new_row, new_col)
                 else:

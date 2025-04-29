@@ -8,6 +8,8 @@ A brief description of what this project does and who it's for
 
 ## Documentation
 
+[Documentation](https://linktodocumentation)
+
 1. Look for players.
 - Use DFS (Depth-first search) algorithm to look for players on the pitch (Matrix).
 
@@ -20,6 +22,4 @@ A brief description of what this project does and who it's for
 - Vertical
 - Broken/Curve
 
-4. Give players options if a passing lane is not found (Broken/Curve).
-- Dribble
-- Pass into open space (into a lane thats nearest to the player found)
+4. Check if there are any surrounding players close to the open player and if there is, check how far the ball has to travel vs how close the oppostion player is to the player/ball.
