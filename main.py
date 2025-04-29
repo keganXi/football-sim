@@ -32,6 +32,7 @@
 # should correspond to pitch coordinates, that how we retrieve the player
 
 import numpy as np
+import pandas as pd
 import  json
 import time
 from passing import POSITION_COORDINATES, get_passing_lane_and_path
@@ -55,11 +56,17 @@ COLS, ROWS = 19, 24 # (19, 24)
 PITCH = np.zeros((ROWS, COLS))
 PITCH = PITCH.astype(int)
 
+df = pd.DataFrame(
+    PITCH,
+    index=[idx for idx in range(ROWS)],
+    columns=[idx for idx in range(COLS)]
+)
+
 field_players("HOME")
 field_players("AWAY")
 
 
-print(PITCH)
+print(df)
 print(f"rows: {len(PITCH)}")
 print(f"columns: {len(PITCH[0])}")
 print(f"Position: {PITCH[0][4]}") # (-1, 5) -> (row, col)
@@ -74,7 +81,7 @@ total_passes = []
 while MINUTE < FULL_TIME:
     MINUTE+=1
 
-    player = scan_pitch(PITCH, player_position)
+    player = scan_pitch(PITCH, player_position, start=player_position)
     if player is None:
         print("nothing found")
 
