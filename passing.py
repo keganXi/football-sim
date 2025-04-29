@@ -71,11 +71,11 @@ def get_passing_lane_and_path(start, end):
 # (0, 0) -> (row, col)
 POSITION_COORDINATES = {
     "GK": {
-        "HOME": (-1, 9),
+        "HOME": (23, 9),
         "AWAY": (0, 9),
     },
     "DF": {
-        "HOME": (19, 9),
+        "HOME": (10, 13),
         "AWAY": (5, 9),
     },
     "RM": {
