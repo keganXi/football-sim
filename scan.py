@@ -1,28 +1,39 @@
 from passing import get_passing_lane_and_path
 
 
-def scan_pitch(grid, position, visited=None, start=None):
+def scan_pitch(grid, position, start=None):
     # NOTE: Depth-first search
-    if visited is None:
-        visited = set()
+    start = position
 
+    # Initialize a stack for DFS and a visited set
+    stack = [position]
+    visited = set()
     visited.add(position)
 
-    # Check adjacent positions (up, down, left, right)
-    row, col = position
-    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # Up, Down, Left, Right
-    for dr, dc in directions:
-        new_row, new_col = row + dr, col + dc
+    while stack:
+        # Get the current position from the stack
+        row, col = stack.pop()
 
-        # Ensure the new position is within bounds and not already visited
-        if 0 <= new_row < len(grid) and 0 <= new_col < len(grid[0]) and (new_row, new_col) not in visited:
-            if grid[new_row, new_col] != 0 and grid[new_row, new_col] != -1:  # Check if it's occupied (player present)
-                pass_type, path = get_passing_lane_and_path(start, (new_row, new_col))
-                if path != None and start != path[0]:
-                    print(f"{start} -> {(new_row, new_col)} ({pass_type})")
-                    return (new_row, new_col)
+        # Check adjacent positions (up, down, left, right)
+        directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # Up, Down, Left, Right
+        for dr, dc in directions:
+            new_row, new_col = row + dr, col + dc
 
-            else:
-                result = scan_pitch(grid, (new_row, new_col), visited, start=start)
-                if result is not None:
-                    return result
+            # Ensure the new position is within bounds and not already visited
+            if (0 <= new_row < len(grid) and
+                0 <= new_col < len(grid[0]) and
+                (new_row, new_col) not in visited):
+
+                visited.add((new_row, new_col))
+
+                if grid[new_row, new_col] != 0 and grid[new_row, new_col] != -1:  # Check if it's occupied (player present)
+                    pass_type, path = get_passing_lane_and_path(start, (new_row, new_col))
+                    if path is not None:
+                        print(f"{start} -> {(new_row, new_col)} ({pass_type})")
+                        return (new_row, new_col)
+                else:
+                    # Add the new position to the stack for further exploration
+                    stack.append((new_row, new_col))
+
+    # No match found after exploring all reachable positions
+    return None

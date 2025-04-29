@@ -75,13 +75,13 @@ print("\nScan for passing lanes...")
 MINUTE = 0
 FULL_TIME = 90
 
-player_position = POSITION_COORDINATES["RM"]["HOME"]
+player_position = POSITION_COORDINATES["GK"]["HOME"]
 print(player_position)
 total_passes = []
 while MINUTE < FULL_TIME:
     MINUTE+=1
 
-    player = scan_pitch(PITCH, player_position, start=player_position)
+    player = scan_pitch(PITCH, player_position)
     if player is None:
         print("nothing found")
 

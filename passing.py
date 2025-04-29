@@ -79,7 +79,7 @@ POSITION_COORDINATES = {
         "AWAY": (5, 9),
     },
     "RM": {
-        "HOME": (5, -1),
+        "HOME": (5, 18),
         "AWAY": (18, 0),
     },
     "CAM": {
@@ -88,7 +88,7 @@ POSITION_COORDINATES = {
     },
     "LM": {
         "HOME": (5, 0),
-        "AWAY": (18, -1),
+        "AWAY": (18, 18),
     },
     "ST": {
         "HOME": (2, 9),
