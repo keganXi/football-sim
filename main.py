@@ -75,7 +75,7 @@ print("\nScan for passing lanes...")
 MINUTE = 0
 FULL_TIME = 90
 
-player_position = POSITION_COORDINATES["DF"]["HOME"]
+player_position = POSITION_COORDINATES["ST"]["HOME"]
 # print(player_position)
 total_passes = []
 while MINUTE < FULL_TIME:

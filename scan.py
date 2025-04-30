@@ -30,6 +30,7 @@ def scan_pitch(grid, position, start=None):
                     pass_type, path = get_passing_lane_and_path(start, (new_row, new_col))
                     if path is not None: # passing lane found
                         print(f"{start} -> {(new_row, new_col)} ({pass_type})")
+                        print(f"Ball Travel: {len(path)}")
                         return (new_row, new_col)
                 else:
                     # Add the new position to the stack for further exploration
