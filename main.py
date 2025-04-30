@@ -36,19 +36,24 @@ import pandas as pd
 import  json
 import time
 from passing import POSITION_COORDINATES, get_passing_lane_and_path
-from players import HOME_PLAYERS
+from players import HOME_PLAYERS, AWAY_PLAYERS
 from scan import scan_pitch
 
 
 def field_players(side):
     # NOTE: side -> "HOME" or "AWAY"
     num = 1
+    PLAYERS = HOME_PLAYERS
     if side == "AWAY":
+        PLAYERS = AWAY_PLAYERS
         num = -1
-    for key, value in POSITION_COORDINATES.items():
-        row = value[side][0]
-        col = value[side][1]
-        PITCH[row, col] = num
+
+    for role, value in POSITION_COORDINATES.items():
+        for player in PLAYERS:
+            if player["role"] == role:
+                row = value[side][0]
+                col = value[side][1]
+                PITCH[row, col] = num
 
 
 COLS, ROWS = 19, 24 # (19, 24)
@@ -75,7 +80,7 @@ print("\nScan for passing lanes...")
 MINUTE = 0
 FULL_TIME = 90
 
-player_position = POSITION_COORDINATES["ST"]["HOME"]
+player_position = POSITION_COORDINATES["LCB"]["HOME"]
 # print(player_position)
 total_passes = []
 while MINUTE < FULL_TIME:
@@ -87,13 +92,11 @@ while MINUTE < FULL_TIME:
 
     get_position = ""
     for key, value in POSITION_COORDINATES.items():
-        if value["HOME"] == player:
-            get_position = key
+         for item in HOME_PLAYERS:
+             if item["role"] == key and value["HOME"] == player:
+                 print(f"{item["name"]} - {item["role"]}")
+                 player_position = player
 
-    position = ()
-    for item in HOME_PLAYERS:
-        if item["role"] == get_position:
-            print(f"{item["name"]} - {item["role"]}")
     player_position = player
 
     total_passes.append(MINUTE)

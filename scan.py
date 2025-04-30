@@ -6,16 +6,16 @@ def scan_pitch(grid, position, start=None):
     start = position
 
     # Initialize a stack for DFS and a visited set
-    stack = [position]
+    stack = [start]
     visited = set()
-    visited.add(position)
+    visited.add(start)
 
     while stack:
         # Get the current position from the stack
         row, col = stack.pop()
 
         # Check adjacent positions (up, down, left, right)
-        directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # Up, Down, Left, Right
+        directions = [(-1, 0), (0, -1), (0, 1), (1, 0)]  # Up, Down, Left, Right
         for dr, dc in directions:
             new_row, new_col = row + dr, col + dc
 
@@ -29,8 +29,8 @@ def scan_pitch(grid, position, start=None):
                 if grid[new_row, new_col] != 0 and grid[new_row, new_col] != -1:  # Check if it's occupied (player present)
                     pass_type, path = get_passing_lane_and_path(start, (new_row, new_col))
                     if path is not None: # passing lane found
-                        print(f"{start} -> {(new_row, new_col)} ({pass_type})")
-                        print(f"Ball Travel: {len(path)}")
+                        # print(f"{start} -> {(new_row, new_col)} ({pass_type})")
+                        print(f"{start} - {(new_row, new_col)}")
                         return (new_row, new_col)
                 else:
                     # Add the new position to the stack for further exploration
