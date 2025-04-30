@@ -81,25 +81,29 @@ MINUTE = 0
 FULL_TIME = 90
 
 player_position = POSITION_COORDINATES["LCB"]["HOME"]
+BALL_POS = player_position
+
 # print(player_position)
 total_passes = []
 while MINUTE < FULL_TIME:
     MINUTE+=1
 
-    player = scan_pitch(PITCH, player_position)
-    if player is None:
+    scan = scan_pitch(PITCH, player_position)
+    if scan is None:
         print("nothing found")
 
-    get_position = ""
+    check_scan = scan if scan != None else {}
+    player = check_scan["player"]
+    BALL_POS = check_scan["path"] # e.g [(1,2), (0,3), (2,1)] (0 idx from player, -1 idx current player)
+
     for key, value in POSITION_COORDINATES.items():
          for item in HOME_PLAYERS:
              if item["role"] == key and value["HOME"] == player:
                  print(f"{item["name"]} - {item["role"]}")
                  player_position = player
 
-    player_position = player
-
     total_passes.append(MINUTE)
     # time.sleep(1)
 
+print(PITCH)
 print(f"Total Passes {len(total_passes)}")
