@@ -38,6 +38,8 @@ import time
 from passing import POSITION_COORDINATES, get_passing_lane_and_path
 from players import HOME_PLAYERS, AWAY_PLAYERS
 from scan import scan_pitch
+from possession import in_possession
+from awareness import team_awareness
 
 
 def field_players(side):
@@ -88,22 +90,22 @@ total_passes = []
 while MINUTE < FULL_TIME:
     MINUTE+=1
 
+    # scan pitch
     scan = scan_pitch(PITCH, player_position)
     if scan is None:
         print("nothing found")
-
     check_scan = scan if scan != None else {}
-    player = check_scan["player"]
-    BALL_POS = check_scan["path"] # e.g [(1,2), (0,3), (2,1)] (0 idx from player, -1 idx current player)
+    player = check_scan["player"] # player coordinates
+    BALL_POS = check_scan["path"][-1] # e.g [(1,2), (0,3), (2,1)] (0 idx from player, -1 idx current player)
 
-    for key, value in POSITION_COORDINATES.items():
-         for item in HOME_PLAYERS:
-             if item["role"] == key and value["HOME"] == player:
-                 print(f"{item["name"]} - {item["role"]}")
-                 player_position = player
+    possess = in_possession(PITCH, BALL_POS)
+    team_awareness(PITCH, possess["team"], possess["pos"], BALL_POS)
+
+    print(f"{possess['team']} |\t{possess['name']} - {possess['pos']}")
+    player_position = player
 
     total_passes.append(MINUTE)
     # time.sleep(1)
 
-print(PITCH)
+print(df)
 print(f"Total Passes {len(total_passes)}")
