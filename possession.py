@@ -9,19 +9,18 @@ def in_possession(grid, coord):
     team = None
     name = None
     pos = None
-    for key, value in POSITION_COORDINATES.items():
-        if value["HOME"] == coord:
-            team = "HOME"
-            pos = key
-        elif value["AWAY"] == coord:
-            team = "AWAY"
-            pos = key
+    data = [*HOME_PLAYERS, *AWAY_PLAYERS]
 
-        if team is not None and key == pos:
-            players = AWAY_PLAYERS if team == "AWAY" else HOME_PLAYERS
-            for item in players:
-                if pos == item["role"]:
-                    name = item["name"]
+    for player in data:
+        if player["coord"] == coord:
+            team = "HOME"
+            name = player["name"]
+            pos = player["role"]
+        elif player["coord"] == coord:
+            team = "AWAY"
+            name = ["name"]
+            pos = ["role"]
+
     return {
         "team": team,
         "name": name,

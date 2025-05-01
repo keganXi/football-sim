@@ -1,7 +1,7 @@
 # Grid (Pitch)
 #
-#   0   1   2   3   4   5   6   7   8   9   10  11  12  13  14  15  16  17  18  19 (-1)
-#   A   B   C   D   E   F   G   H   I   J   K   L   M   N   O   P   Q   R   S   T
+#   0   1   2   3   4   5   6   7   8   9   10  11  12  13  14  15  16  17  18  19  20 (-1)
+#   A   B   C   D   E   F   G   H   I   J   K   L   M   N   O   P   Q   R   S   T   U
 # 0
 # 1
 # 2
@@ -26,7 +26,11 @@
 # 21
 # 22
 # 23
-# 24 (-1)
+# 24
+# 25
+# 26 (-1)
+
+from pitch import PITCH, PITCH_LANE, DEFENSIVE_THIRD, MIDDLE_THIRD, FINAL_THIRD
 
 
 def get_passing_lane_and_path(start, end):
@@ -67,61 +71,67 @@ def get_passing_lane_and_path(start, end):
     return pass_type, path
 
 
+CENTER = int(len(PITCH[0])/2) # center col
+LAST = int(len(PITCH)-1) # last row
+RIGHT = int(len(PITCH[0])-1)
+
+
+
 
 # (0, 0) -> (row, col)
 POSITION_COORDINATES = {
     "GK": {
-        "HOME": (23, 9),
-        "AWAY": (0, 9),
+        "HOME": (LAST, CENTER),
+        "AWAY": (0, CENTER),
     },
 
     # Defence
     "CB": {
-        "HOME": (19, 9),
-        "AWAY": (4, 9),
+        "HOME": (LAST-4, CENTER),
+        "AWAY": (4, CENTER),
     },
     "LCB": {
-        "HOME": (20, 6),
-        "AWAY": (3, 12),
+        "HOME": (LAST-4, CENTER-2),
+        "AWAY": (4, CENTER+2),
     },
     "RCB": {
-        "HOME": (20, 12),
-        "AWAY": (3, 6),
+        "HOME": (LAST-4, CENTER+2),
+        "AWAY": (4, CENTER-2),
     },
     "LB": {
-        "HOME": (19, 0),
-        "AWAY": (4, 18),
+        "HOME": (LAST-6, 0),
+        "AWAY": (6, RIGHT),
     },
     "RB": {
-        "HOME": (19, 18),
-        "AWAY": (4, 0),
+        "HOME": (LAST-6, RIGHT),
+        "AWAY": (6, 0),
     },
 
     # Midfield
     "LCM": {
-        "HOME": (18, 6),
-        "AWAY": (5, 12),
+        "HOME": (LAST-8, CENTER-2),
+        "AWAY": (8, CENTER+2),
     },
     "RCM": {
-        "HOME": (18, 12),
-        "AWAY": (5, 6),
+        "HOME": (LAST-8, CENTER+2),
+        "AWAY": (8, CENTER-2),
     },
     "RM": {
-        "HOME": (15, 18),
-        "AWAY": (8, 0),
+        "HOME": (LAST-10, RIGHT),
+        "AWAY": (10, 0),
     },
     "CAM": {
-        "HOME": (16, 9),
-        "AWAY": (7, 9),
+        "HOME": (LAST-10, CENTER),
+        "AWAY": (10, CENTER),
     },
     "LM": {
-        "HOME": (15, 0),
-        "AWAY": (8, 18),
+        "HOME": (LAST-10, 0),
+        "AWAY": (10, RIGHT),
     },
 
     # Attack
     "ST": {
-        "HOME": (13, 9),
-        "AWAY": (10, 9),
+        "HOME": (LAST-12, CENTER),
+        "AWAY": (12, CENTER),
     },
 }
