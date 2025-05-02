@@ -15,7 +15,12 @@ HOME_PLAYERS = [
 
 AWAY_PLAYERS = [
     {"role": "GK", "coord": (0,0), "name": "Iker Casillas"},
-    {"role": "CB",  "coord": (0,0), "name": "Rio Ferdinand"},
+    {"role": "RCB",  "coord": (0,0), "name": "Rio Ferdinand"},
+    {"role": "LCB",  "coord": (0,0), "name": "Sergio Ramos"},
+    {"role": "RB",  "coord": (0,0), "name": "Lahm"},
+    {"role": "LB",  "coord": (0,0), "name": "Evra"},
+    {"role": "RCM",  "coord": (0,0), "name": "Beckham"},
+    {"role": "LCM",  "coord": (0,0), "name": "Xavi"},
     {"role": "RM",  "coord": (0,0), "name": "Kaka"},
     {"role": "CAM", "coord": (0,0), "name": "Iniesta"},
     {"role": "LM", "coord": (0,0), "name": "Thierry Henry"},

@@ -72,29 +72,29 @@ print("\nScan for passing lanes...")
 MINUTE = 0
 FULL_TIME = 90
 
-player_position = POSITION_COORDINATES["LCB"]["HOME"]
+player_position = POSITION_COORDINATES["GK"]["HOME"]
 BALL_POS = player_position
 
 # print(player_position)
 total_passes = []
-# while MINUTE < FULL_TIME:
-#     MINUTE+=1
+while MINUTE < FULL_TIME:
+    MINUTE+=1
 
-#     # scan pitch
-#     scan = scan_pitch(PITCH, player_position)
-#     if scan is None:
-#         print("nothing found")
-#     check_scan = scan if scan != None else {}
-#     player = check_scan["player"] # player coordinates
-#     BALL_POS = check_scan["path"][-1] # e.g [(1,2), (0,3), (2,1)] (0 idx from player, -1 idx current player)
+    # scan pitch
+    scan = scan_pitch(PITCH, player_position)
+    if scan is None:
+        print("nothing found")
+    check_scan = scan if scan != None else {}
+    player = check_scan["player"] # player coordinates
+    BALL_POS = check_scan["path"][-1] # e.g [(1,2), (0,3), (2,1)] (0 idx from player, -1 idx current player)
 
-#     # possess = in_possession(PITCH, BALL_POS)
-#     # team_reposition(PITCH, possess["team"], possess["pos"], BALL_POS)
+    possess = in_possession(PITCH, BALL_POS)
+    team_reposition(PITCH, possess["team"], possess["pos"], BALL_POS)
 
-#     # print(f"{possess['team']} |\t{possess['name']} - {possess['pos']}")
-#     # player_position = player
+    print(f"{possess['team']} |\t{possess['name']} - {possess['pos']}")
+    player_position = player
 
-#     total_passes.append(MINUTE)
+    total_passes.append(MINUTE)
 
 print(GRID)
 print(f"Total Passes {len(total_passes)}")

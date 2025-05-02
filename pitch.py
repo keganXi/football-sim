@@ -50,9 +50,9 @@ GRID = pd.DataFrame(
     columns=[idx for idx in range(COLS)]
 )
 
-FINAL_THIRD = GRID[:PITCH_3rd] # Attack
-MIDDLE_THIRD = GRID[PITCH_3rd:PITCH_3rd*2] # Midfield
-DEFENSIVE_THIRD = GRID[PITCH_3rd*2:-1] # Defence
+FINAL_THIRD = GRID.iloc[:PITCH_3rd] # Attack
+MIDDLE_THIRD = GRID.iloc[PITCH_3rd:PITCH_3rd*2] # Midfield
+DEFENSIVE_THIRD = GRID.iloc[PITCH_3rd*2:] # Defence
 
 HOME_FINAL_THIRD = FINAL_THIRD
 HOME_DEFENSIVE_THIRD = DEFENSIVE_THIRD
