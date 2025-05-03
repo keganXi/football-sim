@@ -36,9 +36,13 @@
 from passing import POSITION_COORDINATES, get_passing_lane_and_path
 from players import HOME_PLAYERS, AWAY_PLAYERS
 from scan import scan_pitch
+import numpy as np
+from display import display
+import matplotlib.pyplot as plt
+from matplotlib import colors
 from possession import in_possession
 from positioning import team_reposition
-from pitch import GRID, PITCH, PITCH_LANE, PITCH_3rd, HOME_FINAL_THIRD
+from pitch import GRID, PITCH, PITCH_LANE, PITCH_3rd, HOME_FINAL_THIRD, COLS, ROWS
 
 
 def field_players(side):
@@ -70,7 +74,7 @@ print(f"columns: {len(PITCH[0])}")
 print("\nScan for passing lanes...")
 
 MINUTE = 0
-FULL_TIME = 90
+FULL_TIME = 50
 
 player_position = POSITION_COORDINATES["GK"]["HOME"]
 BALL_POS = player_position
@@ -95,6 +99,7 @@ while MINUTE < FULL_TIME:
     player_position = player
 
     total_passes.append(MINUTE)
+    display(GRID)
 
-print(GRID)
+print(AWAY_PLAYERS)
 print(f"Total Passes {len(total_passes)}")
