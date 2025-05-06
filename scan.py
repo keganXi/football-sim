@@ -1,7 +1,7 @@
 from passing import get_passing_lane_and_path
 
 
-def scan_pitch(grid, position) -> dict | None:
+def scan_pitch(grid, position, side=None) -> dict | None:
     # NOTE: Depth-first search
     start = position
 
@@ -14,8 +14,8 @@ def scan_pitch(grid, position) -> dict | None:
         # Get the current position from the stack
         row, col = stack.pop()
 
-        # Check adjacent positions (up, down, left, right)
-        directions = [(-1, 0), (0, -1), (0, 1), (1, 0)]  # Up, Left, Right, Down
+        # Check adjacent positions (Up, Left, Right, Down)
+        directions = [(1, 0) , (0, -1), (0, 1), (-1, 0)]
         for dr, dc in directions:
             new_row, new_col = row + dr, col + dc
 
@@ -29,8 +29,6 @@ def scan_pitch(grid, position) -> dict | None:
                 if grid[new_row, new_col] != 0 and grid[new_row, new_col] != -1:  # Check if it's occupied (player present)
                     pass_type, path = get_passing_lane_and_path(start, (new_row, new_col))
                     if path is not None: # passing lane found
-                        # print(f"{start} -> {(new_row, new_col)} ({pass_type})")
-                        # print(f"{start} - {(new_row, new_col)}")
                         return {"player": (new_row, new_col), "path": path}
                 else:
                     # Add the new position to the stack for further exploration

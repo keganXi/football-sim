@@ -74,7 +74,7 @@ print(f"columns: {len(PITCH[0])}")
 print("\nScan for passing lanes...")
 
 MINUTE = 0
-FULL_TIME = 50
+FULL_TIME = 90
 
 player_position = POSITION_COORDINATES["GK"]["HOME"]
 BALL_POS = player_position
@@ -93,9 +93,9 @@ while MINUTE < FULL_TIME:
     BALL_POS = check_scan["path"][-1] # e.g [(1,2), (0,3), (2,1)] (0 idx from player, -1 idx current player)
 
     possess = in_possession(PITCH, BALL_POS)
+    print(f"{possess['team']} |\t{possess['name']} - {possess['pos']}")
     team_reposition(PITCH, possess["team"], possess["pos"], BALL_POS)
 
-    print(f"{possess['team']} |\t{possess['name']} - {possess['pos']}")
     player_position = player
 
     total_passes.append(MINUTE)
