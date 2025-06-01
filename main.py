@@ -79,19 +79,22 @@ FULL_TIME = 90
 HOME_SCORE = 0
 AWAY_SCORE = 0
 
-player_position = POSITION_COORDINATES["RM"]["AWAY"]
+team = "AWAY"
+player_position = POSITION_COORDINATES["RM"][team]
 BALL_POS = player_position
 
-# print(player_position)
+possess = in_possession(PITCH, BALL_POS, team)
+print(possess)
+
 total_passes = []
 while MINUTE < FULL_TIME:
     MINUTE+=5
 
-    scan = scan_pitch(PITCH, player_position, "AWAY")
+    scan = scan_pitch(PITCH, player_position, team)
     if scan is None:
         # no pass found, take action e.g. dribble
-        possess = in_possession(PITCH, BALL_POS)
-        print(f"{possess['team']} |\t{possess['name']} - {possess['pos']}")
+        print("\n\nNot Found\n\n")
+        possess = in_possession(PITCH, BALL_POS, team)
         team_reposition(PITCH, possess["team"], possess["pos"], BALL_POS)
         display(GRID)
         continue
@@ -99,7 +102,7 @@ while MINUTE < FULL_TIME:
     check_scan = scan
     player = check_scan["player"] # player coordinates
     BALL_POS = check_scan["path"][-1] # e.g [(1,2), (0,3), (2,1)] (0 idx from player, -1 idx current player)
-    possess = in_possession(PITCH, BALL_POS)
+    possess = in_possession(PITCH, BALL_POS, team)
     print(f"{possess['team']} |\t{possess['name']} - {possess['pos']}")
     team_reposition(PITCH, possess["team"], possess["pos"], BALL_POS)
     player_position = player

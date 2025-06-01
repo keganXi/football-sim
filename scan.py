@@ -10,7 +10,7 @@ def scan_pitch(grid, position, team) -> dict | None:
     visited = set()
     visited.add(start)
 
-    opposition = -1 if team == "HOME" else -1
+    opposition = -1 if team == "HOME" else 1
 
     while stack:
         # Get the current position from the stack

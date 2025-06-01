@@ -49,9 +49,10 @@ def spatial_awareness(
         # Add neighboring positions (up, down, left, right)
         neighbors = [
             (row - 1, col),  # up
+            (row + 1, col),  # down
             (row, col - 1),  # left
             (row, col + 1),   # right
-            (row + 1, col),  # down
+
         ]
         if team == "AWAY":
             neighbors = [
@@ -70,7 +71,7 @@ def spatial_awareness(
 
 
 def get_def_coord(team):
-    players = AWAY_PLAYERS if team == "Away" else HOME_PLAYERS
+    players = HOME_PLAYERS if team == "AWAY" else AWAY_PLAYERS
 
     coord = []
     for ap in players:
@@ -98,10 +99,10 @@ def push_up_cf(grid, ball_pos, team):
     row, col = ball_pos
 
     players = HOME_PLAYERS
-    current = 1
+    figure = 1
     if team == "AWAY":
         players = AWAY_PLAYERS
-        current = -1
+        figure = -1
 
     for hp in players:
         if hp["coord"] != ball_pos and hp["role"] in ["ST", "CF"]:
@@ -114,14 +115,18 @@ def push_up_cf(grid, ball_pos, team):
                 new_row, new_col = new_coord
                 grid[hp_row, hp_col] = 0 # remove player previous position (grid)
                 hp["coord"] = new_coord # add new position to player coord
-                grid[new_row, new_col] = current # player new grid position
+                grid[new_row, new_col] = figure # player new grid position
 
 
 
 def push_up_cam(grid, ball_pos, team):
     row, col = ball_pos
 
-    players = AWAY_PLAYERS if team == "AWAY" else HOME_PLAYERS
+    players = HOME_PLAYERS
+    figure = 1
+    if team == "AWAY":
+        players = AWAY_PLAYERS
+        figure = - 1
 
     for hp in players:
         if hp["coord"] != ball_pos and hp["role"] in ["CAM"]:
@@ -130,12 +135,16 @@ def push_up_cam(grid, ball_pos, team):
             # depending on ball coordinates (depending on positioning rating)
             att_coord = get_att_coord(team)
             att_row, att_col = att_coord
+
             new_coord = spatial_awareness(team, att_coord, min_rows=att_row+2, min_cols=8, max_cols=12)
+            if team == "AWAY":
+                new_coord = spatial_awareness(team, att_coord, max_rows=att_row-2, min_cols=8, max_cols=12)
+
             if new_coord is not None:
                 new_row, new_col = new_coord
                 grid[hp_row, hp_col] = 0
                 hp["coord"] = new_coord
-                grid[new_row, new_col] = 1
+                grid[new_row, new_col] = figure
 
 
 
@@ -160,18 +169,22 @@ def push_up_cb(grid, ball_pos, team):
 def push_up_cm(grid, ball_pos, team):
     row, col = ball_pos
 
-    players = AWAY_PLAYERS if team == "AWAY" else HOME_PLAYERS
+    players = HOME_PLAYERS
+    figure = 1
+    if team == "AWAY":
+        players = AWAY_PLAYERS
+        figure = - 1
 
     for hp in players:
         if hp["coord"] != ball_pos and hp["role"] in ["CM", "RCM", "LCM"]:
             hp_row, hp_col = hp["coord"]
-            row = MIDDLE_THIRD.index[3]
+            row = int(MIDDLE_THIRD.index[3])
             new_coord = spatial_awareness(team, (row, hp_col), min_rows=row, min_cols=6, max_cols=14)
             if new_coord is not None:
                 new_row, new_col = new_coord
                 grid[hp_row, hp_col] = 0 # remove player previous position (grid)
                 hp["coord"] = (new_row, new_col) # add new position to player coord
-                grid[new_row, new_col] = 1 # player new grid position
+                grid[new_row, new_col] = figure # player new grid position
 
 
 
@@ -237,8 +250,15 @@ def closest_pressure(grid, ball_pos, team):
     """
     closest = (0, 0)
     min_dist = float('inf')
+    ball_row, _ = ball_pos
 
-    players = AWAY_PLAYERS if team == "HOME" else HOME_PLAYERS
+    players = AWAY_PLAYERS
+    figure = -1
+    opposition = "AWAY"
+    if team == "AWAY":
+        players = HOME_PLAYERS
+        figure = 1
+        opposition = "HOME"
 
     for ap in players:
         op_coord = ap["coord"]
@@ -251,12 +271,16 @@ def closest_pressure(grid, ball_pos, team):
     row, col = closest
     for ap in players:
         if ap["coord"] == (row, col):
-            new_coord = spatial_awareness(team, ball_pos)
+
+            new_coord = spatial_awareness(opposition, ball_pos, min_rows=ball_row)
+            if team == "HOME":
+                new_coord = spatial_awareness(opposition, ball_pos, max_rows=ball_row)
+
             if new_coord is not None:
                 ap_row, ap_col = new_coord
                 grid[row, col] = 0
                 ap["coord"] = new_coord
-                grid[ap_row, ap_col] = -1
+                grid[ap_row, ap_col] = figure
                 break
 
 
@@ -274,4 +298,4 @@ def team_reposition(grid, team, pos, ball_pos):
     # push_up_wide_players(grid, ball_pos, "LB", team)
     # push_up_wide_players(grid, ball_pos, "RB", team)
     # push_up_cb(grid, ball_pos, team) # Centre Backs
-    # closest_pressure(grid, ball_pos, team)
+    closest_pressure(grid, ball_pos, team)
