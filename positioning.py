@@ -57,9 +57,9 @@ def spatial_awareness(
         if team == "AWAY":
             neighbors = [
                 (row + 1, col),  # down
+                (row - 1, col),  # up
                 (row, col - 1),  # left
                 (row, col + 1),   # right
-                (row - 1, col),  # up
             ]
 
         for n in neighbors:
@@ -126,7 +126,7 @@ def push_up_cam(grid, ball_pos, team):
     figure = 1
     if team == "AWAY":
         players = AWAY_PLAYERS
-        figure = - 1
+        figure = -1
 
     for hp in players:
         if hp["coord"] != ball_pos and hp["role"] in ["CAM"]:
@@ -151,18 +151,24 @@ def push_up_cam(grid, ball_pos, team):
 def push_up_cb(grid, ball_pos, team):
     row, col = ball_pos
 
-    players = AWAY_PLAYERS if team == "AWAY" else HOME_PLAYERS
+    players = HOME_PLAYERS
+    figure = 1
+    if team == "AWAY":
+        players = AWAY_PLAYERS
+        figure = -1
 
     for hp in players:
         if hp["coord"] != ball_pos and hp["role"] in ["CB", "LCB", "RCB"]:
             hp_row, hp_col = hp["coord"]
             row = MIDDLE_THIRD.index[0] if team == "AWAY" else MIDDLE_THIRD.index[-1]
             new_coord = spatial_awareness(team, (row, hp_col), min_rows=row, min_cols=6, max_cols=14)
+            if team == "AWAY":
+                 new_coord = spatial_awareness(team, (row, hp_col), max_rows=row, min_cols=6, max_cols=14)
             if new_coord is not None:
                 new_row, new_col = new_coord
                 grid[hp_row, hp_col] = 0 # remove player previous position (grid)
                 hp["coord"] = (new_row, new_col) # add new position to player coord
-                grid[new_row, new_col] = 1 # player new grid position
+                grid[new_row, new_col] = figure # player new grid position
 
 
 
@@ -291,11 +297,11 @@ def team_reposition(grid, team, pos, ball_pos):
     """
     # low_block(grid)
     push_up_cf(grid, ball_pos, team) # Centre Forward
-    # push_up_cam(grid, ball_pos, team) # Attacking Midfield
-    # push_up_cm(grid, ball_pos, team) # Centre Midfield
+    push_up_cam(grid, ball_pos, team) # Attacking Midfield
+    push_up_cm(grid, ball_pos, team) # Centre Midfield
     # push_up_wide_players(grid, ball_pos, "LM", team)
     # push_up_wide_players(grid, ball_pos, "RM", team)
     # push_up_wide_players(grid, ball_pos, "LB", team)
     # push_up_wide_players(grid, ball_pos, "RB", team)
-    # push_up_cb(grid, ball_pos, team) # Centre Backs
+    push_up_cb(grid, ball_pos, team) # Centre Backs
     closest_pressure(grid, ball_pos, team)

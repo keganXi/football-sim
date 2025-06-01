@@ -79,7 +79,7 @@ FULL_TIME = 90
 HOME_SCORE = 0
 AWAY_SCORE = 0
 
-team = "AWAY"
+team = "HOME"
 player_position = POSITION_COORDINATES["RM"][team]
 BALL_POS = player_position
 
