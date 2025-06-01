@@ -79,15 +79,15 @@ FULL_TIME = 90
 HOME_SCORE = 0
 AWAY_SCORE = 0
 
-player_position = POSITION_COORDINATES["RM"]["AWAY"]
+player_position = POSITION_COORDINATES["RM"]["HOME"]
 BALL_POS = player_position
 
 # print(player_position)
 total_passes = []
 while MINUTE < FULL_TIME:
-    MINUTE+=5
+    MINUTE+=1
 
-    scan = scan_pitch(PITCH, player_position, "AWAY")
+    scan = scan_pitch(PITCH, player_position, "HOME")
     if scan is None:
         # no pass found, take action e.g. dribble
         possess = in_possession(PITCH, BALL_POS)

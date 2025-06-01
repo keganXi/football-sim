@@ -28,7 +28,6 @@ def is_occupied(coord, players):
 
 
 def spatial_awareness(
-    team,
     coord,
     min_rows=0, min_cols=0,
     max_rows=len(GRID), max_cols=len(GRID[0])) -> tuple | None:
@@ -49,18 +48,10 @@ def spatial_awareness(
         # Add neighboring positions (up, down, left, right)
         neighbors = [
             (row - 1, col),  # up
-            (row, col - 1),  # left
-            (row, col + 1),   # right
             (row + 1, col),  # down
+            (row, col - 1),  # left
+            (row, col + 1),  # right
         ]
-        if team == "AWAY":
-            neighbors = [
-                (row + 1, col),  # down
-                (row, col - 1),  # left
-                (row, col + 1),   # right
-                (row - 1, col),  # up
-            ]
-
 
         for n in neighbors:
             if n not in visited:
@@ -70,11 +61,9 @@ def spatial_awareness(
 
 
 
-def get_def_coord(team):
-    players = HOME_PLAYERS if team == "Away" else AWAY_PLAYERS
-
+def get_def_coord():
     coord = []
-    for ap in players:
+    for ap in AWAY_PLAYERS:
         if ap["role"] in DEFENCE:
             coord.append((ap["coord"]))
 
@@ -82,12 +71,9 @@ def get_def_coord(team):
 
 
 
-def get_att_coord(team):
+def get_att_coord():
     coord = []
-
-    players = AWAY_PLAYERS if team == "AWAY" else HOME_PLAYERS
-
-    for ap in players:
+    for ap in HOME_PLAYERS:
         if ap["role"] in ATTACK:
             coord.append((ap["coord"]))
 
@@ -95,18 +81,16 @@ def get_att_coord(team):
 
 
 
-def push_up_cf(grid, ball_pos, team):
+def push_up_cf(grid, ball_pos):
     row, col = ball_pos
 
-    players = AWAY_PLAYERS if team == "AWAY" else HOME_PLAYERS
-
-    for hp in players:
+    for hp in HOME_PLAYERS:
         if hp["coord"] != ball_pos and hp["role"] in ["ST", "CF"]:
             hp_row, hp_col = hp["coord"]
             # Idea: player positioning depends on speed e.g. how far he can travel up the pitch.
-            def_coord = get_def_coord(team)
+            def_coord = get_def_coord()
             def_row, _ = def_coord
-            new_coord = spatial_awareness(team, def_coord, min_rows=def_row, min_cols=8, max_cols=12)
+            new_coord = spatial_awareness(def_coord, min_rows=def_row, min_cols=8, max_cols=12)
             if new_coord is not None:
                 new_row, new_col = new_coord
                 grid[hp_row, hp_col] = 0 # remove player previous position (grid)
@@ -115,19 +99,17 @@ def push_up_cf(grid, ball_pos, team):
 
 
 
-def push_up_cam(grid, ball_pos, team):
+def push_up_cam(grid, ball_pos):
     row, col = ball_pos
 
-    players = AWAY_PLAYERS if team == "AWAY" else HOME_PLAYERS
-
-    for hp in players:
+    for hp in HOME_PLAYERS:
         if hp["coord"] != ball_pos and hp["role"] in ["CAM"]:
             hp_row, hp_col = hp["coord"]
             # Idea: CAM has to position themeself to be in a position to receive the ball
             # depending on ball coordinates (depending on positioning rating)
-            att_coord = get_att_coord(team)
+            att_coord = get_att_coord()
             att_row, att_col = att_coord
-            new_coord = spatial_awareness(team, att_coord, min_rows=att_row+2, min_cols=8, max_cols=12)
+            new_coord = spatial_awareness(att_coord, min_rows=att_row+2, min_cols=8, max_cols=12)
             if new_coord is not None:
                 new_row, new_col = new_coord
                 grid[hp_row, hp_col] = 0
@@ -136,16 +118,13 @@ def push_up_cam(grid, ball_pos, team):
 
 
 
-def push_up_cb(grid, ball_pos, team):
+def push_up_cb(grid, ball_pos):
     row, col = ball_pos
-
-    players = AWAY_PLAYERS if team == "AWAY" else HOME_PLAYERS
-
-    for hp in players:
+    for hp in HOME_PLAYERS:
         if hp["coord"] != ball_pos and hp["role"] in ["CB", "LCB", "RCB"]:
             hp_row, hp_col = hp["coord"]
-            row = MIDDLE_THIRD.index[0] if team == "AWAY" else MIDDLE_THIRD.index[-1]
-            new_coord = spatial_awareness(team, (row, hp_col), min_rows=row, min_cols=6, max_cols=14)
+            row = MIDDLE_THIRD.index[-1]
+            new_coord = spatial_awareness((row, hp_col), min_rows=row, min_cols=6, max_cols=14)
             if new_coord is not None:
                 new_row, new_col = new_coord
                 grid[hp_row, hp_col] = 0 # remove player previous position (grid)
@@ -154,16 +133,13 @@ def push_up_cb(grid, ball_pos, team):
 
 
 
-def push_up_cm(grid, ball_pos, team):
+def push_up_cm(grid, ball_pos):
     row, col = ball_pos
-
-    players = AWAY_PLAYERS if team == "AWAY" else HOME_PLAYERS
-
-    for hp in players:
+    for hp in HOME_PLAYERS:
         if hp["coord"] != ball_pos and hp["role"] in ["CM", "RCM", "LCM"]:
             hp_row, hp_col = hp["coord"]
             row = MIDDLE_THIRD.index[3]
-            new_coord = spatial_awareness(team, (row, hp_col), min_rows=row, min_cols=6, max_cols=14)
+            new_coord = spatial_awareness((row, hp_col), min_rows=row, min_cols=6, max_cols=14)
             if new_coord is not None:
                 new_row, new_col = new_coord
                 grid[hp_row, hp_col] = 0 # remove player previous position (grid)
@@ -172,7 +148,7 @@ def push_up_cm(grid, ball_pos, team):
 
 
 
-def push_up_wide_players(grid, ball_pos, role, team):
+def push_up_wide_players(grid, ball_pos, role):
     MAX_COLS = 0
     MIN_COLS = 0
     if role in ["LM", "LB"]:
@@ -185,10 +161,10 @@ def push_up_wide_players(grid, ball_pos, role, team):
     for hp in HOME_PLAYERS:
         if hp["coord"] != ball_pos and hp["role"] in [role]:
             hp_row, hp_col = hp["coord"]
-            row, _ = get_def_coord(team)
+            row, _ = get_def_coord()
             if hp["role"] in ["LB", "RB"]:
                 row = MIDDLE_THIRD.index[4]
-            new_coord = spatial_awareness(team, (row, hp_col), min_rows=row, max_cols=MAX_COLS, min_cols=MIN_COLS)
+            new_coord = spatial_awareness((row, hp_col), min_rows=row, max_cols=MAX_COLS, min_cols=MIN_COLS)
             if new_coord is not None:
                 new_row, new_col = new_coord
                 grid[hp_row, hp_col] = 0 # remove player previous position (grid)
@@ -227,7 +203,7 @@ def low_block(grid):
 
 
 
-def closest_pressure(grid, ball_pos, team):
+def closest_pressure(grid, ball_pos):
     """
         NOTE: find the closest player to the ball coordinates, and
         reposition player coordinates in a pressure position.
@@ -235,9 +211,7 @@ def closest_pressure(grid, ball_pos, team):
     closest = (0, 0)
     min_dist = float('inf')
 
-    players = AWAY_PLAYERS if team == "HOME" else HOME_PLAYERS
-
-    for ap in players:
+    for ap in AWAY_PLAYERS:
         op_coord = ap["coord"]
         dist = math.sqrt((ball_pos[0] - op_coord[0])**2 + (ball_pos[1] - op_coord[1])**2)
 
@@ -246,9 +220,9 @@ def closest_pressure(grid, ball_pos, team):
             closest = op_coord
 
     row, col = closest
-    for ap in players:
+    for ap in AWAY_PLAYERS:
         if ap["coord"] == (row, col):
-            new_coord = spatial_awareness(team, ball_pos)
+            new_coord = spatial_awareness(ball_pos)
             if new_coord is not None:
                 ap_row, ap_col = new_coord
                 grid[row, col] = 0
@@ -263,12 +237,12 @@ def team_reposition(grid, team, pos, ball_pos):
         and who'm the ball is with (home/away player)
     """
     # low_block(grid)
-    push_up_cf(grid, ball_pos, team) # Centre Forward
-    push_up_cam(grid, ball_pos, team) # Attacking Midfield
-    push_up_cm(grid, ball_pos, team) # Centre Midfield
-    # push_up_wide_players(grid, ball_pos, "LM", team)
-    # push_up_wide_players(grid, ball_pos, "RM", team)
-    # push_up_wide_players(grid, ball_pos, "LB", team)
-    # push_up_wide_players(grid, ball_pos, "RB", team)
-    push_up_cb(grid, ball_pos, team) # Centre Backs
-    closest_pressure(grid, ball_pos, team)
+    push_up_cf(grid, ball_pos) # Centre Forward
+    push_up_cam(grid, ball_pos) # Attacking Midfield
+    push_up_cm(grid, ball_pos) # Centre Midfield
+    push_up_wide_players(grid, ball_pos, "LM")
+    push_up_wide_players(grid, ball_pos, "RM")
+    push_up_wide_players(grid, ball_pos, "LB")
+    push_up_wide_players(grid, ball_pos, "RB")
+    push_up_cb(grid, ball_pos) # Centre Backs
+    closest_pressure(grid, ball_pos)
