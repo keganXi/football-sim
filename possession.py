@@ -12,17 +12,14 @@ def in_possession(grid, coord):
     data = [*HOME_PLAYERS, *AWAY_PLAYERS]
 
     for player in data:
+
         if player["coord"] == coord:
-            team = "HOME"
             name = player["name"]
             pos = player["role"]
-        elif player["coord"] == coord:
-            team = "AWAY"
-            name = ["name"]
-            pos = ["role"]
+            break
 
     return {
-        "team": team,
+        "team": "AWAY",
         "name": name,
         "pos": pos
     }

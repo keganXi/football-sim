@@ -34,8 +34,8 @@ from pitch import PITCH, PITCH_LANE, DEFENSIVE_THIRD, MIDDLE_THIRD, FINAL_THIRD
 
 
 def get_passing_lane_and_path(start, end):
-    x1, y1 = start
-    x2, y2 = end
+    x1, y1 = start # (row, col)
+    x2, y2 = end # (row, col)
     path = []
 
     if x1 == x2:
@@ -71,10 +71,10 @@ def get_passing_lane_and_path(start, end):
     return pass_type, path
 
 
+
 CENTER = int(len(PITCH[0])/2) # center col
 LAST = int(len(PITCH)-1) # last row
 RIGHT = int(len(PITCH[0])-1)
-
 
 
 
@@ -99,12 +99,12 @@ POSITION_COORDINATES = {
         "AWAY": (4, CENTER-2),
     },
     "LB": {
-        "HOME": (LAST-6, 0),
-        "AWAY": (6, RIGHT),
+        "HOME": (LAST-6, 1),
+        "AWAY": (6, RIGHT-1),
     },
     "RB": {
-        "HOME": (LAST-6, RIGHT),
-        "AWAY": (6, 0),
+        "HOME": (LAST-6, RIGHT-1),
+        "AWAY": (6, 1),
     },
 
     # Midfield
@@ -117,16 +117,16 @@ POSITION_COORDINATES = {
         "AWAY": (8, CENTER-2),
     },
     "RM": {
-        "HOME": (LAST-10, RIGHT),
-        "AWAY": (10, 0),
+        "HOME": (LAST-10, RIGHT-1),
+        "AWAY": (10, 1),
     },
     "CAM": {
         "HOME": (LAST-10, CENTER),
         "AWAY": (10, CENTER),
     },
     "LM": {
-        "HOME": (LAST-10, 0),
-        "AWAY": (10, RIGHT),
+        "HOME": (LAST-10, 1),
+        "AWAY": (10, RIGHT-1),
     },
 
     # Attack

@@ -50,6 +50,7 @@ GRID = pd.DataFrame(
     columns=[idx for idx in range(COLS)]
 )
 
+
 FINAL_THIRD = GRID.iloc[:PITCH_3rd] # Attack
 MIDDLE_THIRD = GRID.iloc[PITCH_3rd:PITCH_3rd*2] # Midfield
 DEFENSIVE_THIRD = GRID.iloc[PITCH_3rd*2:] # Defence
@@ -59,3 +60,7 @@ HOME_DEFENSIVE_THIRD = DEFENSIVE_THIRD
 
 AWAY_DEFENSIVE_THIRD = FINAL_THIRD
 AWAY_FINAL_THIRD = DEFENSIVE_THIRD
+
+# 6 yard box
+AWAY_6_YARD_BOX = GRID.iloc[:4, 6:15]
+HOME_6_YARD_BOX = GRID.iloc[ROWS-4: ROWS, 6:15]
