@@ -61,7 +61,6 @@ def spatial_awareness(
                 (row - 1, col),  # up
             ]
 
-
         for n in neighbors:
             if n not in visited:
                 queue.append(n)
@@ -71,7 +70,7 @@ def spatial_awareness(
 
 
 def get_def_coord(team):
-    players = HOME_PLAYERS if team == "Away" else AWAY_PLAYERS
+    players = AWAY_PLAYERS if team == "Away" else HOME_PLAYERS
 
     coord = []
     for ap in players:
@@ -98,7 +97,11 @@ def get_att_coord(team):
 def push_up_cf(grid, ball_pos, team):
     row, col = ball_pos
 
-    players = AWAY_PLAYERS if team == "AWAY" else HOME_PLAYERS
+    players = HOME_PLAYERS
+    current = 1
+    if team == "AWAY":
+        players = AWAY_PLAYERS
+        current = -1
 
     for hp in players:
         if hp["coord"] != ball_pos and hp["role"] in ["ST", "CF"]:
@@ -111,7 +114,7 @@ def push_up_cf(grid, ball_pos, team):
                 new_row, new_col = new_coord
                 grid[hp_row, hp_col] = 0 # remove player previous position (grid)
                 hp["coord"] = new_coord # add new position to player coord
-                grid[new_row, new_col] = 1 # player new grid position
+                grid[new_row, new_col] = current # player new grid position
 
 
 
@@ -264,11 +267,11 @@ def team_reposition(grid, team, pos, ball_pos):
     """
     # low_block(grid)
     push_up_cf(grid, ball_pos, team) # Centre Forward
-    push_up_cam(grid, ball_pos, team) # Attacking Midfield
-    push_up_cm(grid, ball_pos, team) # Centre Midfield
+    # push_up_cam(grid, ball_pos, team) # Attacking Midfield
+    # push_up_cm(grid, ball_pos, team) # Centre Midfield
     # push_up_wide_players(grid, ball_pos, "LM", team)
     # push_up_wide_players(grid, ball_pos, "RM", team)
     # push_up_wide_players(grid, ball_pos, "LB", team)
     # push_up_wide_players(grid, ball_pos, "RB", team)
-    push_up_cb(grid, ball_pos, team) # Centre Backs
-    closest_pressure(grid, ball_pos, team)
+    # push_up_cb(grid, ball_pos, team) # Centre Backs
+    # closest_pressure(grid, ball_pos, team)
