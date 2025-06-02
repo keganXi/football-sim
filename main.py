@@ -88,7 +88,7 @@ print(possess)
 
 total_passes = []
 while MINUTE < FULL_TIME:
-    MINUTE+=5
+    MINUTE+=2
 
     scan = scan_pitch(PITCH, player_position, team)
     if scan is None:

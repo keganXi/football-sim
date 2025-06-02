@@ -194,28 +194,32 @@ def push_up_cm(grid, ball_pos, team):
 
 
 
-def push_up_wide_players(grid, ball_pos, role, team):
-    MAX_COLS = 0
-    MIN_COLS = 0
-    if role in ["LM", "LB"]:
-        MAX_COLS = 3
-        MIN_COLS = 0
-    elif role in ["RM", "RB"]:
-        MAX_COLS = 21
+def push_up_left_att(grid, ball_pos, role, team):
+    max_cols = 3
+    min_cols = 0
+    players = HOME_PLAYERS
+    figure = 1
+    if team == "AWAY":
+        players = AWAY_PLAYERS
         MIN_COLS = 17
+        figure = -1
 
-    for hp in HOME_PLAYERS:
+    for hp in players:
         if hp["coord"] != ball_pos and hp["role"] in [role]:
             hp_row, hp_col = hp["coord"]
             row, _ = get_def_coord(team)
-            if hp["role"] in ["LB", "RB"]:
-                row = MIDDLE_THIRD.index[4]
-            new_coord = spatial_awareness(team, (row, hp_col), min_rows=row, max_cols=MAX_COLS, min_cols=MIN_COLS)
+
+            new_coord = None
+            if team == "HOME":
+                new_coord = spatial_awareness(team, (row, hp_col), min_rows=row, max_cols=max_cols)
+            elif team == "AWAY":
+                new_coord = spatial_awareness(team, (row, hp_col), max_rows=row, min_cols=min_cols)
+
             if new_coord is not None:
                 new_row, new_col = new_coord
                 grid[hp_row, hp_col] = 0 # remove player previous position (grid)
-                hp["coord"] = new_coord # add new position to player coord
-                grid[new_row, new_col] = 1 # player new grid position
+                hp["coord"] = (new_row, new_col) # add new position to player coord
+                grid[new_row, new_col] = figure # player new grid position
 
 
 
@@ -299,8 +303,8 @@ def team_reposition(grid, team, pos, ball_pos):
     push_up_cf(grid, ball_pos, team) # Centre Forward
     push_up_cam(grid, ball_pos, team) # Attacking Midfield
     push_up_cm(grid, ball_pos, team) # Centre Midfield
-    # push_up_wide_players(grid, ball_pos, "LM", team)
-    # push_up_wide_players(grid, ball_pos, "RM", team)
+    push_up_left_att(grid, ball_pos, "LM", team)
+    # push_up_wide_att(grid, ball_pos, "RM", team)
     # push_up_wide_players(grid, ball_pos, "LB", team)
     # push_up_wide_players(grid, ball_pos, "RB", team)
     push_up_cb(grid, ball_pos, team) # Centre Backs
